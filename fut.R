@@ -1,5 +1,5 @@
 
-setwd("C:/Users/CJY/Desktop/2016_fut")
+setwd("2016_fut")
 getwd()
 
 library(quantmod)
