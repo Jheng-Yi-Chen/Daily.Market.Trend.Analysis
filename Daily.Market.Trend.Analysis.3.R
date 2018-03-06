@@ -1,5 +1,3 @@
-### TX market trend analysis
-
 # if (!("quantmod" %in% as.character(installed.packages()[,1]))) {install.packages("quantmod")}
 # remove.packages("quantmod")
 
@@ -18,7 +16,7 @@ library(quantmod); library(Quandl); library(tidyquant); library(PerformanceAnaly
 # Sys.setenv(TZ = "Asia/Taipei")
 # now()
 
-setwd("F:/TX market trend analysis")
+setwd("F:/")
 getwd()
 # dir()
 
