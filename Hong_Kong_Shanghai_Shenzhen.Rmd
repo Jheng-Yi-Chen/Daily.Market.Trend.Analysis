@@ -15,12 +15,12 @@ library(FinancialInstrument); library(blotter); require(IKTrading)
 ```
 
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
-Shanghai_Hong_Kong <- read.csv("F:/Data/Shanghai_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+Shanghai_Hong_Kong <- read.csv("Shanghai_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 Shanghai_Hong_Kong <- Shanghai_Hong_Kong[, c(1, 2, 10)]
 names(Shanghai_Hong_Kong) <- c("Date", "Net.Inflow.of.Funds.per.Day.from.Shanghai", "Hang.Seng.Index")
 names(Shanghai_Hong_Kong) <- c("Date", "from.Shanghai", "Hang.Seng.Index")
 
-Shenzhen_Hong_Kong <- read.csv("F:/Data/Shenzhen_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+Shenzhen_Hong_Kong <- read.csv("Shenzhen_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 Shenzhen_Hong_Kong <- Shenzhen_Hong_Kong[, c(1, 2, 10)]
 names(Shenzhen_Hong_Kong) <- c("Date", "Net.Inflow.of.Funds.per.Day.from.Shenzhen", "Hang.Seng.Index")
 names(Shenzhen_Hong_Kong) <- c("Date", "from.Shenzhen", "Hang.Seng.Index")
