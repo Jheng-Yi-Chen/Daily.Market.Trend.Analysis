@@ -15,33 +15,7 @@ library(egcm); library(PairTrading); library(PerformanceAnalytics); library(TTR)
 library(FinancialInstrument); library(blotter); require(IKTrading)
 ```
 
-```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
-Shanghai_to_Hong_Kong <- read.csv("Shanghai_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-Shanghai_to_Hong_Kong <- Shanghai_to_Hong_Kong[, c(1, 2, 10)]
-names(Shanghai_to_Hong_Kong) <- c("Date", "Net.Inflow.of.Funds.per.Day.from.Shanghai", "Hang.Seng.Index")
-names(Shanghai_to_Hong_Kong) <- c("Date", "from.Shanghai", "Hang.Seng.Index")
 
-Shenzhen_to_Hong_Kong <- read.csv("Shenzhen_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-Shenzhen_to_Hong_Kong <- Shenzhen_to_Hong_Kong[, c(1, 2, 10)]
-names(Shenzhen_to_Hong_Kong) <- c("Date", "Net.Inflow.of.Funds.per.Day.from.Shenzhen", "Hang.Seng.Index")
-names(Shenzhen_to_Hong_Kong) <- c("Date", "from.Shenzhen", "Hang.Seng.Index")
-
-Shanghai_Shenzhen_to_Hong_Kong <- left_join(Shanghai_to_Hong_Kong, Shenzhen_to_Hong_Kong, by = "Date")
-
-Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index <- Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index.x
-Shanghai_Shenzhen_to_Hong_Kong <- Shanghai_Shenzhen_to_Hong_Kong %>% select(-Hang.Seng.Index.y, -Hang.Seng.Index.x)
-Shanghai_Shenzhen_to_Hong_Kong <- Shanghai_Shenzhen_to_Hong_Kong %>% filter(Hang.Seng.Index != "-")
-Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index <- as.numeric(Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index)
-# Shanghai_Shenzhen_to_Hong_Kong <- Shanghai_Shenzhen_to_Hong_Kong %>% group_by(year(Date), month(Date)) %>% summarise(Year = year(Date), Month = month(Date))
-
-Shanghai_Shenzhen_to_Hong_Kong$Date <- as.Date(Shanghai_Shenzhen_to_Hong_Kong$Date)
-Shanghai_Shenzhen_to_Hong_Kong$from.Shanghai <- Shanghai_Shenzhen_to_Hong_Kong$from.Shanghai*100
-Shanghai_Shenzhen_to_Hong_Kong$from.Shenzhen <- Shanghai_Shenzhen_to_Hong_Kong$from.Shenzhen*100
-# Shanghai_Shenzhen_to_Hong_Kong$Net.Inflow.of.Funds.per.Day.from.Shanghai.Shenzhen <- Shanghai_Shenzhen_to_Hong_Kong$Net.Inflow.of.Funds.per.Day.from.Shanghai + Shanghai_Shenzhen_to_Hong_Kong$Net.Inflow.of.Funds.per.Day.from.Shenzhen
-
-
-# glimpse(Shanghai_Shenzhen_to_Hong_Kong)
-```
 
 
 ## Shanghai and Hong Kong
@@ -55,10 +29,10 @@ ggplot() +
 
 ## Shanghai and Hong Kong
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-Shanghai_Hong_Kong <- ggplot(Shanghai_Shenzhen_to_Hong_Kong, aes(x = Date, y = Hang.Seng.Index)) +
+Shanghai_Hong_Kong <- ggplot(Shanghai_Shenzhen_Hong_Kong, aes(x = Date, y = Hang.Seng.Index)) +
   geom_line(aes(x = Date, y = Hang.Seng.Index)) + 
   # geom_line(aes(x = Date, y = from.Shanghai)) +
-  geom_bar(data = Shanghai_Shenzhen_to_Hong_Kong, aes(x = Date,y = from.Shanghai), stat = "identity")
+  geom_bar(data = Shanghai_Shenzhen_Hong_Kong, aes(x = Date,y = from.Shanghai), stat = "identity")
 Shanghai_Hong_Kong
 # ggplotly(Shanghai_Hong_Kong)
 ```
@@ -77,42 +51,20 @@ Shanghai_Hong_Kong
 
 
 
-```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
-Shanghai_to_Hong_Kong <- read.csv("F:/Data/Shanghai_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-Shanghai_to_Hong_Kong <- Shanghai_to_Hong_Kong[, c(1, 2, 10)]
-names(Shanghai_to_Hong_Kong) <- c("Date", "Net.Inflow.of.Funds.per.Day.from.Shanghai", "Hang.Seng.Index")
-names(Shanghai_to_Hong_Kong) <- c("Date", "from.Shanghai", "Hang.Seng.Index")
 
-Shenzhen_to_Hong_Kong <- read.csv("F:/Data/Shenzhen_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-Shenzhen_to_Hong_Kong <- Shenzhen_to_Hong_Kong[, c(1, 2, 10)]
-names(Shenzhen_to_Hong_Kong) <- c("Date", "Net.Inflow.of.Funds.per.Day.from.Shenzhen", "Hang.Seng.Index")
-names(Shenzhen_to_Hong_Kong) <- c("Date", "from.Shenzhen", "Hang.Seng.Index")
-
-Shanghai_Shenzhen_to_Hong_Kong <- left_join(Shanghai_to_Hong_Kong, Shenzhen_to_Hong_Kong, by = "Date")
-
-Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index <- Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index.x
-Shanghai_Shenzhen_to_Hong_Kong <- Shanghai_Shenzhen_to_Hong_Kong %>% select(-Hang.Seng.Index.y, -Hang.Seng.Index.x)
-Shanghai_Shenzhen_to_Hong_Kong <- Shanghai_Shenzhen_to_Hong_Kong %>% filter(Hang.Seng.Index != "-")
-Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index <- as.numeric(Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index)
-Shanghai_Shenzhen_to_Hong_Kong$Date <- as.Date(Shanghai_Shenzhen_to_Hong_Kong$Date)
-Shanghai_Shenzhen_to_Hong_Kong$from.Shanghai <- Shanghai_Shenzhen_to_Hong_Kong$from.Shanghai*100
-Shanghai_Shenzhen_to_Hong_Kong$from.Shenzhen <- Shanghai_Shenzhen_to_Hong_Kong$from.Shenzhen*100
-# Shanghai_Shenzhen_to_Hong_Kong$Net.Inflow.of.Funds.per.Day.from.Shanghai.Shenzhen <- Shanghai_Shenzhen_to_Hong_Kong$Net.Inflow.of.Funds.per.Day.from.Shanghai + Shanghai_Shenzhen_to_Hong_Kong$Net.Inflow.of.Funds.per.Day.from.Shenzhen
-# glimpse(Shanghai_Shenzhen_to_Hong_Kong)
-```
 
 
 
 
 ## Shanghai and Hong Kong
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
-Shanghai_Shenzhen_to_Hong_Kong <- xts(x = Shanghai_Shenzhen_to_Hong_Kong, order.by = Shanghai_Shenzhen_to_Hong_Kong$Date)
-Shanghai_Shenzhen_to_Hong_Kong <- Shanghai_Shenzhen_to_Hong_Kong[, -3]
+Shanghai_Shenzhen_Hong_Kong <- xts(x = Shanghai_Shenzhen_Hong_Kong, order.by = Shanghai_Shenzhen_Hong_Kong$Date)
+Shanghai_Shenzhen_Hong_Kong <- Shanghai_Shenzhen_Hong_Kong[, -3]
 
 ```
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
-dygraph(Shanghai_Shenzhen_to_Hong_Kong["/2016-12-05"]) %>% 
+dygraph(Shanghai_Shenzhen_Hong_Kong["/2016-12-05"]) %>% 
   dySeries("from.Shanghai", axis = "y2") %>% 
   dyRangeSelector(height = 10)
 ```
@@ -124,29 +76,6 @@ dygraph(Shanghai_Shenzhen_to_Hong_Kong["/2016-12-05"]) %>%
 
 
 
-```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
-Shanghai_to_Hong_Kong <- read.csv("F:/Data/Shanghai_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-Shanghai_to_Hong_Kong <- Shanghai_to_Hong_Kong[, c(1, 2, 10)]
-names(Shanghai_to_Hong_Kong) <- c("Date", "Net.Inflow.of.Funds.per.Day.from.Shanghai", "Hang.Seng.Index")
-names(Shanghai_to_Hong_Kong) <- c("Date", "from.Shanghai", "Hang.Seng.Index")
-
-Shenzhen_to_Hong_Kong <- read.csv("F:/Data/Shenzhen_to_Hong_Kong.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-Shenzhen_to_Hong_Kong <- Shenzhen_to_Hong_Kong[, c(1, 2, 10)]
-names(Shenzhen_to_Hong_Kong) <- c("Date", "Net.Inflow.of.Funds.per.Day.from.Shenzhen", "Hang.Seng.Index")
-names(Shenzhen_to_Hong_Kong) <- c("Date", "from.Shenzhen", "Hang.Seng.Index")
-
-Shanghai_Shenzhen_to_Hong_Kong <- left_join(Shanghai_to_Hong_Kong, Shenzhen_to_Hong_Kong, by = "Date")
-
-Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index <- Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index.x
-Shanghai_Shenzhen_to_Hong_Kong <- Shanghai_Shenzhen_to_Hong_Kong %>% select(-Hang.Seng.Index.y, -Hang.Seng.Index.x)
-Shanghai_Shenzhen_to_Hong_Kong <- Shanghai_Shenzhen_to_Hong_Kong %>% filter(Hang.Seng.Index != "-")
-Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index <- as.numeric(Shanghai_Shenzhen_to_Hong_Kong$Hang.Seng.Index)
-Shanghai_Shenzhen_to_Hong_Kong$Date <- as.Date(Shanghai_Shenzhen_to_Hong_Kong$Date)
-Shanghai_Shenzhen_to_Hong_Kong$from.Shanghai <- Shanghai_Shenzhen_to_Hong_Kong$from.Shanghai*100
-Shanghai_Shenzhen_to_Hong_Kong$from.Shenzhen <- Shanghai_Shenzhen_to_Hong_Kong$from.Shenzhen*100
-# Shanghai_Shenzhen_to_Hong_Kong$Net.Inflow.of.Funds.per.Day.from.Shanghai.Shenzhen <- Shanghai_Shenzhen_to_Hong_Kong$Net.Inflow.of.Funds.per.Day.from.Shanghai + Shanghai_Shenzhen_to_Hong_Kong$Net.Inflow.of.Funds.per.Day.from.Shenzhen
-# glimpse(Shanghai_Shenzhen_to_Hong_Kong)
-```
 
 
 
