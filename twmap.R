@@ -11,4 +11,9 @@ tw.map <- get_stamenmap(tw, zoom = 5, maptype = "toner-lite")
 ggmap(tw.map)
 ggmap(tw.map, extent = "device")
 
-get_googlemap("taiwan", zoom = 12) %>% ggmap()
+get_googlemap("taiwan", zoom = 8) %>% ggmap()
+get_googlemap("taipei", zoom = 12, maptype = "satellite") %>% ggmap()
+get_googlemap("chicago", zoom = 12, maptype = "roadmap") %>% ggmap()
+get_googlemap("taichung", zoom = 15, maptype = "hybrid") %>% ggmap()
+
+
