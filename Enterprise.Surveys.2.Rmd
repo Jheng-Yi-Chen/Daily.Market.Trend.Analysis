@@ -1,0 +1,442 @@
+---
+title: "State-owned Enterprise and Firm Performance: Evidence from Developing Countries"
+author: "Jheng Yi Chen"
+date: "June 20, 2017"
+output:
+  slidy_presentation:
+    fig_width: 6
+    fig_height: 7
+  html_document:
+    highlight: espresso
+    theme: cerulean
+    toc: yes
+    toc_depth: 2
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+job: National Chengchi University
+---
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+library(foreign)
+library(readstata13)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(vcd)
+library(mosaic)
+library(whisker)
+```
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+es1 <- read.dta("ES-Indicators-Database-.dta")
+qog1 <- read.dta("qog_std_ts_jan17.dta", convert.factors = FALSE)
+
+qog_var <- names(qog1) %in% c("ccode", "year", "fh_rol", "fh_polity2", "pwt_hci", "dpi_system", "ht_regtype", "p_polity", "p_polity2", "undp_hdi") 
+qog2 <- qog1[qog_var]
+
+qog2$cy <- qog2$ccode * qog2$year
+es1$cy <- es1$ccode * es1$year
+
+mr1 <- merge(x = es1, y = qog2, by = "cy")
+es2 <- mr1[ which(mr1$car4 >= 1), ]
+```
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+es2$perf11 <- NA
+es2$perf11[es2$perf1 >= 0] <- "increase"
+es2$perf11[es2$perf1 < 0] <- "decrease"
+table(es2$perf11); es2$perf11
+
+es2 %>% select(c(perf11, exporter, obst1)) -> es2peo1 # select columns
+colnames(es2peo1) <- c("Performance", "Exporter", "Access_to_Finance")
+es2peo1$Access_to_Finance[es2peo1$Access_to_Finance == 100] <- "Yes"
+es2peo1$Access_to_Finance[es2peo1$Access_to_Finance == 0] <- "No"
+
+mosaic_es2peo1 <- mosaic( ~ Performance + Exporter + Access_to_Finance, data = es2peo1)
+```
+
+## Research Method and Data
+
+##
+
+Enterprise Surveys
+
+<iframe src="http://www.enterprisesurveys.org/Graphing-Tool" height="600" width="1400"></iframe>
+
+##
+
+Quality of Government
+
+<iframe src="http://qog.pol.gu.se/" height=600 width=1400></iframe>
+
+##
+
+- Dependent Variables:
+    - Firm Performance
+    - Annural Sales Growth, from -100% to +100%
+
+##
+
+- Independent Variables: The Biggest Obstacles, Yes or No
+    - access to finance
+    - access to land
+    - business licensing and permits
+    - corruption
+    - courts
+    - crime, theft and disorder
+    - customs and trade regulations
+    - electricity
+    - inadequately educated workforce
+    - labor regulations
+    - political instability
+    - practices of competitors in the informal sector
+    - tax administration
+    - tax rates
+    - transport
+
+##
+
+- Control Variables
+    - Company Size
+    - Company Age
+    - Proportion of a Firm held by the Largest Owner
+    - Exporter
+    - Human Capital
+    - Rule of Law
+
+## Results and Discussion
+
+## ¡iFigure 1¡j
+
+¡iFigure 1¡j
+
+![](esmap.png)
+
+##
+
+![](map.png)
+
+## ¡iTable 1¡j
+
+¡iTable 1¡j
+
+|              Country             | 2002 | 2003 | 2004 | 2005 | 2006 | 2007 | 2008 | 2009 | 2010 | 2011 | 2012 | 2013 | 2014 | 2015 | 2016 |   N  |
+|:--------------------------------:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|              Albania             |   4  |   0  |   0  |   3  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   8  |
+|              Algeria             |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|              Angola              |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |  19  |   0  |   0  |   0  |   0  |   0  |   0  |  21  |
+|        Antigua and Barbuda       |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|             Argentina            |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |
+|              Armenia             |   7  |   0  |   0  |   3  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  12  |
+|            Azerbaijan            |  15  |   0  |   0  |  15  |   0  |   0  |   0  |  41  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  71  |
+|              Bahamas             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |
+|            Bangladesh            |   0  |   0  |   0  |   0  |   0  |   9  |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |  12  |
+|             Barbados             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|              Belarus             |  22  |   0  |   0  |  14  |   0  |   0  |  54  |   0  |   0  |   0  |   0  |  40  |   0  |   0  |   0  |  130 |
+|               Benin              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   5  |   6  |
+|              Bhutan              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   5  |   0  |   8  |
+|                Bih               |  30  |   0  |   0  |  24  |   0  |   0  |   0  |  29  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |  87  |
+|              Bolivia             |   0  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   7  |
+|             Botswana             |   0  |   0  |   0  |   0  |   5  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |
+|              Brazil              |   0  |   6  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   8  |
+|             Bulgaria             |  11  |   0  |  55  |   7  |   0  |   8  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  82  |
+|           Burkina Faso           |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   8  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   9  |
+|              Burundi             |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   8  |
+|             Cambodia             |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   1  |   7  |
+|             Cameroon             |   0  |   0  |   0  |   0  |   4  |   0  |   0  |  10  |   0  |   0  |   0  |   0  |   0  |   0  |  11  |  25  |
+|            Cape Verde            |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   5  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |
+|     Central African Republic     |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  17  |   0  |   0  |   0  |   0  |   0  |  17  |
+|               Chad               |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   5  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   5  |
+|               Chile              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|               China              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  111 |   0  |   0  |   0  |   0  |  111 |
+|             Colombia             |   0  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   9  |
+|               Congo              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |
+|            Costa Rica            |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |
+|              Croatia             |  18  |   0  |   0  |  14  |   0  |  48  |   0  |   0  |   0  |   0  |   0  |   5  |   0  |   0  |   0  |  85  |
+|               Czech              |   2  |   0  |   0  |   1  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |
+|            Ivory Coast           |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |  12  |
+|             Djibouti             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   2  |
+|        Dominican Republic        |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|                Drc               |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  18  |   0  |   0  |   5  |   0  |   0  |   0  |  23  |
+|              Ecuador             |   0  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   8  |
+|               Egypt              |   0  |   0  |   0  |   0  |   0  |  59  |  45  |   0  |   0  |   0  |   0  |  43  |   0  |   0  |   0  |  147 |
+|            El Salvador           |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   2  |   6  |
+|              Estonia             |   3  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |
+|               Fiji               |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |
+|               Fyrom              |  14  |   0  |   0  |   3  |   0  |   0  |   0  |  16  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |  37  |
+|               Gabon              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  17  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  17  |
+|              Gambia              |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|              Georgia             |   5  |   0  |   0  |   5  |   0  |   0  |  20  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |  32  |
+|              Germany             |   0  |   0  |   0  |  64  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  64  |
+|               Ghana              |   0  |   0  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |  10  |
+|              Greece              |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|              Grenada             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|             Guatemala            |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|              Guinea              |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|           Guinea-Bissau          |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|              Guyana              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |
+|             Honduras             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |
+|              Hungary             |   9  |   0  |   0  |  12  |   0  |   0  |   0  |   7  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |  34  |
+|               India              |   0  |   0  |   0  |   0  |  49  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  39  |   0  |   0  |  88  |
+|             Indonesia            |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   8  |   0  |   0  |   0  |   0  |   0  |  24  |   0  |  32  |
+|               Iraq               |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   5  |   0  |   0  |   0  |   0  |   0  |   5  |
+|              Ireland             |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|              Israel              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   2  |
+|              Jamaica             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|              Jordan              |   0  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   0  |   0  |   0  |   7  |   0  |   0  |   0  |  13  |
+|            Kazakhstan            |  27  |   0  |   0  |   6  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |  41  |
+|               Kenya              |   0  |   0  |   0  |   0  |   0  |   7  |   0  |   0  |   0  |   0  |   0  |  18  |   0  |   0  |   0  |  25  |
+|            Kyrgyzstan            |  14  |   3  |   0  |   9  |   0  |   0  |   0  |   8  |   0  |   0  |   0  |   5  |   0  |   0  |   0  |  39  |
+|              Lao PDR             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   7  |   0  |   0  |   3  |   0  |   0  |   0  |   9  |  19  |
+|              Latvia              |   3  |   0  |   0  |   6  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |  12  |
+|              Lesotho             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   5  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   7  |
+|              Liberia             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|             Lithuania            |   7  |   0  |   3  |   1  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |  17  |
+|            Madagascar            |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |  10  |
+|              Malawi              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   9  |   0  |   0  |  12  |
+|             Malaysia             |   0  |   0  |   0  |   0  |   0  |  15  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  42  |   0  |  57  |
+|               Mali               |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   6  |   0  |   0  |   0  |   0  |   0  |  12  |  19  |
+|            Mauritania            |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   5  |   0  |   0  |   5  |
+|              Mexico              |   0  |   0  |   0  |   0  |   7  |   0  |   0  |   0  |   5  |   0  |   0  |   0  |   0  |   0  |   0  |  12  |
+|              Moldova             |  16  |   3  |   0  |   7  |   0  |   0  |   0  |   9  |   0  |   0  |   0  |  16  |   0  |   0  |   0  |  51  |
+|             Mongolia             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   4  |
+|              Morocco             |   0  |   0  |   0  |   0  |   0  |   9  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |  11  |
+|            Mozambique            |   0  |   0  |   0  |   0  |   0  |   5  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   5  |
+|              Namibia             |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   9  |   0  |   0  |  10  |
+|               Nepal              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   4  |
+|             Nicaragua            |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   7  |
+|               Niger              |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|              Nigeria             |   0  |   0  |   0  |   0  |   0  |   8  |   0  |   0  |   0  |   0  |   0  |   0  |  305 |   0  |   0  |  313 |
+|             Pakistan             |   0  |   0  |   0  |   0  |   0  |  15  |   0  |   0  |   0  |   0  |   0  |  18  |   0  |   0  |   0  |  33  |
+|              Panama              |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |
+|             Paraguay             |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|               Peru               |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |
+|            Philippines           |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   3  |
+|              Poland              |  11  |   1  |   0  |  12  |   0  |   0  |   0  |   9  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |  39  |
+|             Portugal             |   0  |   0  |   0  |  14  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  14  |
+|              Romania             |  16  |   0  |   0  |  12  |   0  |   0  |   0  |  12  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |  42  |
+|              Russia              |  15  |   0  |   0  |  10  |   0  |   0  |   0  |  30  |   0  |   0  |  38  |   0  |   0  |   0  |   0  |  93  |
+|              Rwanda              |   0  |   0  |   0  |   0  |   5  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   7  |
+|               Samoa              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|              Senegal             |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   9  |   0  |   0  |  12  |
+|              Serbia              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  33  |   0  |   0  |   0  |  10  |   0  |   0  |   0  |  43  |
+|       Serbia \& Montenegro       |  30  |   0  |   0  |  28  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  58  |
+|           Sierra Leone           |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|             Slovakia             |   5  |   0  |   0  |   3  |   0  |   0  |   0  |   9  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |  20  |
+|             Slovenia             |   6  |   0  |   0  |   6  |   0  |   0  |   0  |  14  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |  29  |
+|           South Africa           |   0  |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |
+|            South Sudan           |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   2  |
+|               Spain              |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|             Sri Lanka            |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |   0  |   0  |   4  |
+| Saint Vincent and the Grenadines |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   3  |
+|               Sudan              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   1  |
+|             Swaziland            |   0  |   0  |   0  |   0  |   4  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   4  |   8  |
+|              Sweden              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   2  |
+|               Syria              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  10  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  10  |
+|            Tajikistan            |  34  |   5  |   0  |  12  |   0  |   0  |  22  |   0  |   0  |   0  |   0  |  17  |   0  |   0  |   0  |  90  |
+|             Tanzania             |   0  |   0  |   0  |   0  |  12  |   0  |   0  |   0  |   0  |   0  |   0  |   8  |   0  |   0  |   0  |  20  |
+|             Thailand             |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   2  |
+|            Timor-Leste           |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   3  |   0  |   4  |
+|               Togo               |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   3  |
+|               Tonga              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|              Tunisia             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   8  |   0  |   0  |   0  |   8  |
+|              Turkey              |  23  |   0  |  27  |  13  |   0  |   0  |   5  |   0  |   0  |   0  |   0  |  18  |   0  |   0  |   0  |  86  |
+|              Uganda              |   0  |   0  |   0  |   0  |   3  |   0  |   0  |   0  |   0  |   0  |   0  |   6  |   0  |   0  |   0  |   9  |
+|              Ukraine             |  19  |   0  |   0  |   6  |   0  |   0  |  25  |   0  |   0  |   0  |   0  |  14  |   0  |   0  |   0  |  64  |
+|              Uruguay             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |   0  |   0  |   0  |   0  |   0  |   0  |   2  |
+|            Uzbekistan            |  49  |  11  |   0  |  29  |   0  |   0  |  62  |   0  |   0  |   0  |   0  |  78  |   0  |   0  |   0  |  229 |
+|             Venezuela            |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |   0  |   0  |   0  |   0  |   0  |   0  |   1  |
+|              Vietnam             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  90  |   0  |   0  |   0  |   0  |   0  |  36  |   0  |  126 |
+|               Yemen              |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  14  |   0  |   0  |   4  |   0  |   0  |   0  |  18  |
+|              Zambia              |   0  |   0  |   0  |   0  |   0  |   9  |   0  |   0  |   0  |   0  |   0  |   8  |   0  |   0  |   0  |  17  |
+|             Zimbabwe             |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |   0  |  15  |   0  |   0  |   0  |   0  |  19  |  34  |
+|                 N                |  415 |  29  |  85  |  350 |  147 |  212 |  233 |  440 |  117 |  43  |  152 |  389 |  385 |  112 |  73  | 3182 |
+
+## ¡iTable 2¡j
+
+¡iTable 2¡j
+
+|                                                 | Non-exporter |    Exporter   |          N          |
+|:-----------------------------------------------:|:------------:|:-------------:|:-------------------:|
+|                     Exporter                    |     2149     |      944      |         3093        |
+|               The Biggest Obstacle              |      NO      |      YES      |          N          |
+|                access to finance                |     1708     |      307      |         2015        |
+|                  access to land                 |     1955     |       60      |         2015        |
+|          business licensing and permits         |     1965     |       50      |         2015        |
+|                    corruption                   |     1871     |      144      |         2015        |
+|                      courts                     |     1979     |       36      |         2015        |
+|            crime, theft and disorder            |     1964     |       51      |         2015        |
+|          customs and trade regulations          |     1952     |       63      |         2015        |
+|                   electricity                   |     1744     |      271      |         2015        |
+|         inadequately educated workforce         |     1841     |      174      |         2015        |
+|                labor regulations                |     1941     |       74      |         2015        |
+|              political instability              |     1849     |      166      |         2015        |
+| practices of competitors in the informal sector |     1733     |      282      |         2015        |
+|                tax administration               |     1953     |       62      |         2015        |
+|                    tax rates                    |     1822     |      193      |         2015        |
+|                    transport                    |     1933     |       82      |         2015        |
+
+## ¡iTable 2¡j
+
+¡iTable 2¡j
+
+|                                                 | small(¡Õ20)  | medium(20-99) | large(100 and ovoer)|     N    |
+|:-----------------------------------------------:|:------------:|:-------------:|:-------------------:|:--------:|
+|                   Company Size                  |      585     |      956      |         1609        |   3150   |
+|                                                 |      Min     |     Median    |         Mean        |    Max   |
+|                   Company Age                   |       1      |       19      |        27.37        |    172   |
+|             Real Annual Sales Growth            |    -99.946   |     0.439     |        3.557        |    100   |
+|             Annual Employment Growth            |    -66.071   |       0       |        2.966        |    100   |
+|                  Human Capital                  |  1.126447678 |  2.404846191  |      2.48334823     | 3.688082 |
+|                   Rule of Law                   |       1      |       5       |      6.93967163     |    17    |
+|                      Polity                     |      -9      |       4       |     1.880895826     |    10    |
+
+## ¡iFigure 2¡j
+
+¡iFigure 2¡j
+
+![](count_soe_1.png)
+
+## ¡iFigure 3¡j
+
+¡iFigure 3¡j
+
+![](company_size_1.png)
+
+## ¡iFigure 4¡j
+
+¡iFigure 4¡j
+
+![](company_age_1.png)
+
+## ¡iFigure 5¡j
+
+¡iFigure 5¡j
+
+![](company_sector_1.png)
+
+## ¡iFigure 6¡j
+
+¡iFigure 6¡j
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+HCASG <- ggplot(es2, aes(x = es2$pwt_hci, y = es2$perf1)) +
+  geom_point() +
+  labs(x = "Human Capital", y = "Annual Sales Growth") +
+  stat_smooth(method = lm, level = 0.95) +
+  ggtitle("Human Capital and Annual Sales Growth")
+ggplotly(HCASG)
+```
+
+## ¡iFigure 7¡j
+
+¡iFigure 7¡j
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+PFLOASG <- ggplot(es2, aes(x = es2$car6, y = es2$perf1)) +
+  geom_point() +
+  labs(x = "Proportion of a Firm held by the Largest Owner", y = "Annual Sales Growth") +
+  stat_smooth(method = lm, level = 0.95)
+#  ggtitle("Proportion of a Firm held by the Largest Owner and Annual Sales Growth")
+ggplotly(PFLOASG)
+```
+
+## ¡iTable 3¡j
+
+¡iTable 3¡j
+
+![](table3.png)
+
+## ¡iTable 4¡j
+
+¡iTable 4¡j
+
+|                         Random effects                        |           |            |          |
+|:-------------------------------------------------------------:|:---------:|:----------:|:--------:|
+|                             Groups                            |    Name   |  Variance  | Std.Dev. |
+|                            country                            | Intercept |     57     |   7.55   |
+|                            Residual                           |           |    1570    |   39.62  |
+|                         Number of obs                         |           |     979    |          |
+|                             groups                            |  country  |     83     |          |
+
+
+|                         Fixed effects                         |           |            |          |
+|:-------------------------------------------------------------:|:---------:|:----------:|:--------:|
+|                                                               |  Estimate | Std. Error |  t value |
+|                            exporter                           |    48.3   |    12.9    |   3.73   |
+|                  company size, medium(20-99)                  |   -24.8   |     16     |   -1.55  |
+|               company size, large(100 and over)               |   -40.8   |    17.2    |   -2.37  |
+|                          company age                          |   0.738   |    0.363   |   2.03   |
+|         proportion of a firm held by the largest owner        |   0.107   |    0.225   |   0.48   |
+|                       access to finance                       |   -73.3   |    35.3    |   -2.07  |
+|                         access to land                        |   -56.2   |     44     |   -1.28  |
+|                 business licensing and permits                |    86.3   |    57.6    |    1.5   |
+|                           corruption                          |   -23.6   |    39.6    |   -0.6   |
+|                             courts                            |   -2.99   |    52.4    |   -0.06  |
+|                   crime, theft and disorder                   |    -123   |    47.7    |   -2.59  |
+|                 customs and trade regulations                 |   -24.4   |    50.2    |   -0.49  |
+|                          electricity                          |   -45.2   |    36.3    |   -1.24  |
+|                inadequately educated workforce                |    4.86   |    41.3    |   0.12   |
+|                       labor regulations                       |    25.8   |     44     |   0.59   |
+|                     political instability                     |   -71.1   |    37.9    |   -1.87  |
+|        practices of competitors in the informal sector        |   -23.7   |    36.9    |   -0.64  |
+|                       tax administration                      |    29.7   |    45.2    |   0.66   |
+|                           tax rates                           |   -79.7   |     37     |   -2.15  |
+|                           transport                           |     NA    |     NA     |    NA    |
+|                         human capital                         |    3.53   |     16     |   0.22   |
+|                          rule of law                          |   -4.57   |    3.96    |   -1.16  |
+|                             polity                            |    1.93   |     1.9    |   1.02   |
+|                access to finance*human capital                |    7.17   |    14.2    |    0.5   |
+|                 access to finance*rule of law                 |     7     |    3.35    |   2.09   |
+|                    access to finance*polity                   |   -3.64   |    1.57    |   -2.32  |
+|                  access to land*human capital                 |    10.3   |     19     |   0.54   |
+|                   access to land*rule of law                  |    4.96   |    4.21    |   1.18   |
+|                     access to land*polity                     |   -1.86   |    1.96    |   -0.95  |
+|          business licensing and permits*human capital         |   -37.6   |    20.7    |   -1.82  |
+|           business licensing and permits*rule of law          |    1.04   |    5.41    |   0.19   |
+|             business licensing and permits*polity             |   -0.404  |    2.53    |   -0.16  |
+|                    corruption*human capital                   |    -2.1   |    17.4    |   -0.12  |
+|                     corruption*rule of law                    |    3.23   |    4.14    |   0.78   |
+|                       corruption*polity                       |   -1.97   |    1.85    |   -1.06  |
+|                      courts*human capital                     |   -19.7   |    24.1    |   -0.82  |
+|                       courts*rule of law                      |    7.53   |    5.44    |   1.38   |
+|                         courts*polity                         |   -2.79   |    5.07    |   -0.55  |
+|            crime, theft and disorder*human capital            |    10.1   |    21.6    |   0.47   |
+|             crime, theft and disorder*rule of law             |    15.4   |     6.1    |   2.52   |
+|                crime, theft and disorder*polity               |   -6.78   |    3.03    |   -2.24  |
+|          customs and trade regulations*human capital          |    2.36   |    18.8    |   0.13   |
+|           customs and trade regulations*rule of law           |    2.04   |    5.41    |   0.38   |
+|              customs and trade regulations*polity             |   -0.225  |    2.27    |   -0.1   |
+|                   electricity*human capital                   |    6.5    |    14.6    |   0.45   |
+|                    electricity*rule of law                    |    3.71   |    3.35    |   1.11   |
+|                       electricity*polity                      |   -2.55   |    1.53    |   -1.67  |
+|         inadequately educated workforce*human capital         |   -8.66   |    15.7    |   -0.55  |
+|          inadequately educated workforce*rule of law          |    2.35   |    3.91    |    0.6   |
+|             inadequately educated workforce*polity            |   -0.575  |    1.79    |   -0.32  |
+|                labor regulations*human capital                |   -29.3   |    22.9    |   -1.28  |
+|                 labor regulations*rule of law                 |    7.09   |    5.39    |   1.31   |
+|                    labor regulations*polity                   |   -2.53   |    2.62    |   -0.96  |
+|              political instability*human capital              |    8.6    |    15.9    |   0.54   |
+|               political instability*rule of law               |    5.24   |     3.9    |   1.34   |
+|                  political instability*polity                 |   -2.07   |    1.86    |   -1.11  |
+| practices of competitors in the informal sector*human capital |    1.13   |    15.2    |   0.07   |
+|  practices of competitors in the informal sector*rule of law  |    2.52   |    3.55    |   0.71   |
+|     practices of competitors in the informal sector*polity    |   -0.754  |    1.57    |   -0.48  |
+|                tax administration*human capital               |   -27.7   |    20.2    |   -1.37  |
+|                 tax administration*rule of law                |    5.94   |    5.06    |   1.18   |
+|                   tax administration*polity                   |   -2.04   |    2.58    |   -0.79  |
+|                    tax rates*human capital                    |    11.1   |    14.6    |   0.76   |
+|                     tax rates*rule of law                     |    6.48   |    3.55    |   1.83   |
+|                        tax rates*polity                       |    -3.2   |    1.72    |   -1.86  |
+|                    transport*human capital                    |     NA    |     NA     |    NA    |
+|                     transport*rule of law                     |     NA    |     NA     |    NA    |
+|                        transport*polity                       |     NA    |     NA     |    NA    |
+|                           Intercept                           |    29.8   |    39.9    |   0.75   |
+
+## ¡iFigure 8¡j
+
+¡iFigure 8¡j
+
+![](mosaic_es2peo1.png)
+
