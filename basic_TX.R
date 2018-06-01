@@ -5,8 +5,8 @@
 # setwd("C:/Users/mnwu/Desktop/taifex")
 setwd("D:/")
 
-#install.packages("readr")
-#install.packages("quantmod")
+# install.packages("readr")
+# install.packages("quantmod")
 library(readr)
 library(quantmod)
 
@@ -80,7 +80,7 @@ head(Lo(TX_5min))
 head(Cl(TX_5min))
 head(Vo(STK))
 
-#####
+###############
 
 duration = "2017-08-03 08:50:00::2017-08-03 13:43:00"
 TXmin = to.period(TSdata, "minutes", 1)[duration]
@@ -88,35 +88,78 @@ TXmin = to.period(TSdata, "minutes", 1)[duration]
 #View(TXmin)
 chartSeries(TXmin)
 addSMA(5)
-row = Cl(TXmin) > SMA(Cl(TXmin),5)
-View(cbind(Cl(TXmin), SMA(Cl(TXmin), 5), row))
-PL = setNames(rep(0, length(Cl(TXmin))), time(TXmin))
+row = Cl(TXmin) > SMA(Cl(TXmin), 5)
+View(cbind(Op(TXmin), Cl(TXmin), SMA(Cl(TXmin), 5), row))
+PL = setNames(rep(0, length(Cl(TXmin))),
+              time(TXmin))
 
 m = 6
-while ( m < nrow(TXmin)) {
-  if (row[m - 1] == 0 && row[m] == 1){
+while (m < nrow(TXmin)) {
+  if (row[m - 1] == 0 && row[m] == 1) {
     long = as.numeric(Op(TXmin)[m + 1])
-    while( row[m] == 1 && m < nrow(TXmin)) {m = m + 1}
+    while(row[m] == 1 && m < nrow(TXmin)) {
+      m = m + 1
+      }
     PL[m] = as.numeric(Op(TXmin)[m + 1]) - long
   }
   m = m + 1  
 }
 
-plot(cumsum(PL), type = "l", col = "red", lwd = 2)
+# plot(cumsum(PL), type = "l", col = "red", lwd = 2)
+plot(cumsum(PL[PL != 0] - 5), type = "l", col = "red", lwd = 2)
+
+############### 5ma and 10ma
+
+row = SMA(Cl(TXmin), 5) > SMA(Cl(TXmin), 10)
+cbind(Op(TXmin), SMA(Cl(TXmin), 5), SMA(Cl(TXmin), 10), row)
+PL = setNames(rep(0, length(Cl(TXmin))), time(TXmin))
+
+m = 11
+while (m < nrow(TXmin)) {
+  if (row[m - 1] == 0 && row[m] == 1) {
+    long = as.numeric(Op(TXmin)[m + 1])
+    while(row[m] == 1 && m < nrow(TXmin)) {
+      m = m + 1
+    }
+    PL[m] = as.numeric(Op(TXmin)[m + 1]) - long
+  }
+  m = m + 1  
+}
+
+plot(cumsum(PL[PL != 0]), type = "l", col = "red", lwd = 2)
+
+###############
+
+PL = setNames(rep(0, length(Cl(TXmin))), time(TXmin))
+
+while (m < nrow(TXmin)) {
+  if (Cl(TXmin)[m] >= max(Hi(TXmin))[m-3:m-1]) {
+    long = as.numeric(Op(TXmin)[m + 1])
+    while (Cl(TXmin)[m] >= min(Lo(TXmin))[m-3:m-1]) {
+      m = m + 1
+    }
+    PL[m] = as.numeric(Op(TXmin)[m + 1]) - long
+  }
+  m = m + 1  
+}
+
+plot(cumsum(PL[PL != 0]), type = "l", col = "red", lwd = 2)
+
+
 
 
 ###############
 
-length(PL[PL > 0]) / length(PL[PL != 0])
-mean(PL[PL > 0]) / abs(mean(PL[PL < 0]))
-sum(PL[PL >= 0]) / abs(sum(PL[PL < 0]))
+length(PL[PL > 0]) / length(PL[PL != 0]) # 勝率
+mean(PL[PL > 0]) / abs(mean(PL[PL < 0])) # 賺賠比
+sum(PL[PL >= 0]) / abs(sum(PL[PL < 0])) # 獲利因子 (profit factor)，每輸一單位，必可再換來PE單位的獲利。PE > 2，加大部位
 
-############
+###############
 
 DD = rep(0, length(PL))
 topPL = rep(PL[1], length(PL))
 
-for (m in 2:length(PL)){ 
+for (m in 2:length(PL)) { 
   if (sum(PL[1:m]) > topPL[m - 1]){
     ##目前累計獲利 > 過去最高獲利 i.e.創新高
     topPL[m:length(PL)] = sum(PL[1:m]) 
@@ -142,3 +185,11 @@ par(new = T)
 plot(DD, type = "l", lwd = 3, ylim = range(cumsum(PL), DD))
 
 points(which(DD == 0), topPL[which(DD == 0)], pch = 4, col = "purple")
+
+
+
+# 1.indicator, ex: ma
+# 2.signal, ex: 5ma turn over 10ma
+# 3.rule, ex: buy
+
+# 停損不停利，每天隨機進場，十點停損，其他狀況收盤平倉
