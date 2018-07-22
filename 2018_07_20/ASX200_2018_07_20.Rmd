@@ -1,0 +1,51 @@
+---
+title: "ASX200_2018_07_20"
+author: "Jheng-Yi Chen"
+date: "July 22, 2018"
+output: ioslides_presentation
+---
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+# install.packages("Quandl")
+# install.packages("quantmod")
+# install.packages("dygraph")
+# install.packages("tidyverse")
+
+library(Quandl)
+library(quantmod)
+library(tidyverse)
+library(dygraphs)
+```
+
+##
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	include = FALSE
+)
+start_date <- as.Date("2018-01-01")
+end_date <- as.Date("2018-07-22")
+getSymbols("^AXJO", src = "yahoo", from = start_date, to = end_date)
+summary(AXJO) 
+plot(AXJO[, "AXJO.Close"], main = "ASX200")
+candleChart(AXJO, up.col = "red", dn.col = "green", theme = "black")
+
+```
+
+
+##
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+AXJO <- AXJO[, 1:4] %>% tail(100)
+dygraph(AXJO) %>%
+  dyCandlestick() %>% 
+  dyEvent("2018-07-03", "Keep Rate at 1.5%", labelLoc = "bottom", col='blue') %>% 
+  dyLegend(show = 'follow')
+
+
+
+```
+
+
